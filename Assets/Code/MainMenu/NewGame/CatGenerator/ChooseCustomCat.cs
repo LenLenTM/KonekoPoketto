@@ -7,6 +7,8 @@ using Random = System.Random;
 
 public class ChooseCustomCat : MonoBehaviour
 {
+    public GameObject CustomCat;
+    public GameObject TheRoom;
     public TMP_InputField catNameInput;
     public List<Sprite> catSpriteList;
 
@@ -25,5 +27,8 @@ public class ChooseCustomCat : MonoBehaviour
         catPictureNumber = (catPictureNumber + random.Next()) % 14;
 
         GameGenerator.createNewGame(name, catSpriteList[catPictureNumber].name);
+        CustomCat.SetActive(false);
+        TheRoom.SetActive(true);
+        //LoadGame.loadRoom();
     }
 }

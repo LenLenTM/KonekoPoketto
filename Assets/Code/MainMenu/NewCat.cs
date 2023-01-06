@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using Code;
 using Code.InGame;
 using Newtonsoft.Json;
+using TMPro;
 using UnityEngine;
 
 public class NewCat : MonoBehaviour
@@ -9,6 +11,7 @@ public class NewCat : MonoBehaviour
     public GameObject AdoptOrNew;
     public GameObject LittleCatMeow;
     public GameObject MainMenu;
+    public GameObject InGame;
     void Start()
     {
         
@@ -16,18 +19,30 @@ public class NewCat : MonoBehaviour
 
     private void OnMouseDown()
     {
-        LittleCatMeow.SetActive(false);
-        AdoptOrNew.SetActive(true);
-        MainMenu.SetActive(false);
-
-        int slot = Int32.Parse(this.name.Substring(12));
-        GameData gameData = new GameData(slot);
-
-        string toWrite = JsonConvert.SerializeObject(gameData);
-        
-        File.WriteAllText("gameData.json", toWrite);
+        if (transform.GetChild(1).GetComponent<TextMeshProUGUI>().text.Equals("Create a cat"))
+        {
+            LittleCatMeow.SetActive(false);
+            AdoptOrNew.SetActive(true);
+            MainMenu.SetActive(false);
+            defineSlot();
+        }
+        else
+        {
+            defineSlot();
+            MainMenu.SetActive(false);
+            LittleCatMeow.SetActive(false);
+            InGame.SetActive(true);
+            //LoadGame.loadRoom();
+        }
     }
 
+    void defineSlot()
+    {
+        int slot = Int32.Parse(this.name.Substring(12));
+        GameData gameData = new GameData(slot);
+        string toWrite = JsonConvert.SerializeObject(gameData);
+        File.WriteAllText("gameData.json", toWrite);
+    }
     void Update()
     {
         

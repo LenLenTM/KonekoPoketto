@@ -2,6 +2,7 @@ using System.IO;
 using Code.InGame;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Code
 {
@@ -26,8 +27,6 @@ namespace Code
 
             string gameTextEncoded = Savegame.encodeSavegame(savegame);
             WriteSaveGame.createNewSaveGame(gameTextEncoded);
-            
-            //TODO: start new game
         }
     }
 }

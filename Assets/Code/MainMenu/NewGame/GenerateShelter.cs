@@ -34,7 +34,7 @@ public class GenerateShelter : MonoBehaviour
     private void generateCats()
     {
         List<Cats> catNameArray = new List<Cats>();
-        using (StreamReader catsFromJson = new StreamReader("Assets\\catNames.json"))
+        using (StreamReader catsFromJson = new StreamReader("Assets/catNames.json"))
         {
             string json = catsFromJson.ReadToEnd();
             catNameArray = JsonConvert.DeserializeObject<List<Cats>>(json);

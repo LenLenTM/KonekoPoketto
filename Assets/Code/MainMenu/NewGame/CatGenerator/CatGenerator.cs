@@ -35,8 +35,18 @@ namespace Code
             {
                 valueAsString += x;
             }
+            Debug.Log(valueAsString);
             Random random = new Random(1312);
-            long value = ((Int64.Parse(valueAsString) * random.NextInt(59, 75)) % 999999);
+
+            long value;
+            try
+            {
+                value = ((Int64.Parse(valueAsString) * random.NextInt(59, 75)) % 999999);
+            }
+            catch
+            {
+                value = (long)random.NextDouble(10000, 999999);
+            }
             valueAsString = value.ToString().PadLeft(6, (char)random.NextInt(0, 99));
 
             try

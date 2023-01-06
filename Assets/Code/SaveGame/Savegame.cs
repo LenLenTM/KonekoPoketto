@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Code.InGame;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Code
@@ -79,6 +81,31 @@ namespace Code
                 Int32.Parse(paramStrings[21]), Int32.Parse(paramStrings[22]), Int32.Parse(paramStrings[23]), paramStrings[24], paramStrings[25]);
 
             return new Savegame(food, toy, tree, bed, litterBox, myCat);
+        }
+
+        public static Savegame loadSavegame()
+        {
+            int slot;
+            using (StreamReader slotJson = new StreamReader("gameData.json"))
+            {
+                string json = slotJson.ReadToEnd();
+                slot = JsonConvert.DeserializeObject<GameData>(json).gameSlot;
+            }
+
+            string file = "";
+            if (slot == 1)
+            {
+                file = File.ReadAllText("Save1.txt");
+            }
+            else if (slot == 2)
+            {
+                file = File.ReadAllText("Save2.txt");
+            }
+            else
+            {
+                file = File.ReadAllText("Save3.txt");
+            }
+            return Savegame.decodeSavegame(file);
         }
     }
 }
