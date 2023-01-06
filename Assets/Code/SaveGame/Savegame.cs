@@ -17,9 +17,9 @@ namespace Code
         public CatBed catBed;
         public LitterBox litterBox;
         public Cat cat;
-        public string gameSlot;
+        public int furballs;
 
-        public Savegame(Food food, Toy toy, CatTree catTree, CatBed catBed, LitterBox litterBox, Cat cat)
+        public Savegame(Food food, Toy toy, CatTree catTree, CatBed catBed, LitterBox litterBox, Cat cat, int furballs)
         {
             this.food = food;
             this.toy = toy;
@@ -27,6 +27,7 @@ namespace Code
             this.catBed = catBed;
             this.litterBox = litterBox;
             this.cat = cat;
+            this.furballs = furballs;
         }
 
         public static string encodeSavegame(Savegame savegame)
@@ -39,7 +40,8 @@ namespace Code
             gameToString += savegame.litterBox.name + "&" + savegame.litterBox.graphic + "&" + savegame.litterBox.pooCapacity + "&" + savegame.litterBox.cleanliness + "&";
             gameToString += savegame.cat.needForAffection + "&" + savegame.cat.playfull + "&" + savegame.cat.metabolism + "&" + savegame.cat.hunger + "&"
                             + savegame.cat.anger + "&" + savegame.cat.tiredness + "&" + savegame.cat.boredom + "&" + savegame.cat.bodymass + "&"
-                            + savegame.cat.name + "&" + savegame.cat.idlePicture;
+                            + savegame.cat.name + "&" + savegame.cat.idlePicture + "&"
+                            + savegame.furballs;
             
             byte[] ascii = Encoding.ASCII.GetBytes(gameToString);
             string file = "";
@@ -79,8 +81,9 @@ namespace Code
             LitterBox litterBox = new LitterBox(paramStrings[12], paramStrings[13], Int32.Parse(paramStrings[14]), Int32.Parse(paramStrings[15]));
             Cat myCat = new Cat(Int32.Parse(paramStrings[16]), Int32.Parse(paramStrings[17]), Int32.Parse(paramStrings[18]), Int32.Parse(paramStrings[19]), Int32.Parse(paramStrings[20]),
                 Int32.Parse(paramStrings[21]), Int32.Parse(paramStrings[22]), Int32.Parse(paramStrings[23]), paramStrings[24], paramStrings[25]);
-
-            return new Savegame(food, toy, tree, bed, litterBox, myCat);
+            int furballs = Int32.Parse(paramStrings[26]);
+            
+            return new Savegame(food, toy, tree, bed, litterBox, myCat, furballs);
         }
 
         public static Savegame loadSavegame()

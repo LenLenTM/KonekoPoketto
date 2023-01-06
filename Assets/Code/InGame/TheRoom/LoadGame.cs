@@ -15,16 +15,9 @@ namespace Code
         public Image catBed;
         public Image litterBox;
 
-        public void loadRoom()
+        public static void loadRoom(Sprite cat)
         {
-            Savegame savegame = Savegame.loadSavegame();
-            foreach (var x in catList)
-            {
-                if (x.name.Substring(0, 5) == savegame.cat.name.Substring(0, 5))
-                {
-                    catImage.sprite = x;
-                }
-            }
+            
         }
         
     }

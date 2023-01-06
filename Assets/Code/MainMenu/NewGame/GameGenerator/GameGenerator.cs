@@ -23,7 +23,7 @@ namespace Code
             LitterBox starterLitterBox = new LitterBox("Pot", starterLitterBoxSprite, 10, 99);
             Cat myCat = CatGenerator.generateCat(catName, catSprite);
 
-            Savegame savegame = new Savegame(starterFood, starterToy, starterCatTree, starterCatBed, starterLitterBox, myCat);
+            Savegame savegame = new Savegame(starterFood, starterToy, starterCatTree, starterCatBed, starterLitterBox, myCat, 0);
 
             string gameTextEncoded = Savegame.encodeSavegame(savegame);
             WriteSaveGame.createNewSaveGame(gameTextEncoded);

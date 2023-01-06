@@ -29,6 +29,6 @@ public class ChooseCustomCat : MonoBehaviour
         GameGenerator.createNewGame(name, catSpriteList[catPictureNumber].name);
         CustomCat.SetActive(false);
         TheRoom.SetActive(true);
-        //LoadGame.loadRoom();
+        LoadGame.loadRoom(catSpriteList[catPictureNumber]);
     }
 }

@@ -10,6 +10,8 @@ public class Swipe : MonoBehaviour
     private Vector2 startTocuhPosition;
     private Vector2 endTouchPosition;
     public GameObject focus;
+    public GameObject focusShop;
+    public GameObject Shop;
     
     void Update()
     {
@@ -25,13 +27,27 @@ public class Swipe : MonoBehaviour
             if (endTouchPosition.x < startTocuhPosition.x)
             {
                 //RIGHT
-                if (focus.transform.position.x < 5.5f)
+                if (Shop.activeSelf)
                 {
-                    for (int i = 0; i < 550; i++)
+                    if (focusShop.transform.position.x < 5.5f)
                     {
-                        focus.transform.Translate(0.01f, 0, 0);
+                        for (int i = 0; i < 550; i++)
+                        {
+                            focusShop.transform.Translate(0.01f, 0, 0);
+                        }
                     }
                 }
+                else
+                {
+                    if (focus.transform.position.x < 5.5f)
+                    {
+                        for (int i = 0; i < 550; i++)
+                        {
+                            focus.transform.Translate(0.01f, 0, 0);
+                        }
+                    }
+                }
+                
                 
             }
 
@@ -39,11 +55,24 @@ public class Swipe : MonoBehaviour
             {
                 
                 //LEFT
-                if (focus.transform.position.x > -5.5f)
+                if (Shop.activeSelf)
                 {
-                    for (int i = 0; i < 550; i++)
+                    if (focusShop.transform.position.x > -5.5f)
                     {
-                        focus.transform.Translate(-0.01f, 0, 0);
+                        for (int i = 0; i < 550; i++)
+                        {
+                            focusShop.transform.Translate(-0.01f, 0, 0);
+                        }
+                    }
+                }
+                else
+                {
+                    if (focus.transform.position.x > -5.5f)
+                    {
+                        for (int i = 0; i < 550; i++)
+                        {
+                            focus.transform.Translate(-0.01f, 0, 0);
+                        }
                     }
                 }
             }
