@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Caveman Cat",
+    "graphic": "CatTree_0", 
+    "levels": 1
+  },
+  {
+    "name": "Climbing Kitten",
+    "graphic": "CatTree_1",
+    "levels": 2
+  },
+  {
+    "name": "Purrstate",
+    "graphic": "CatTree_2",
+    "levels": 3
+  },
+  {
+    "name": "Pawlace",
+    "graphic": "CatTree_3",
+    "levels": 4
+  }
+]

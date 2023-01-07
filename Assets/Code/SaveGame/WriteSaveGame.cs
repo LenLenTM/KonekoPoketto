@@ -36,10 +36,5 @@ namespace Code
         {
             File.WriteAllText(filename, savegame);
         }
-
-        private void autoSave()
-        {
-            
-        }
     }
 }

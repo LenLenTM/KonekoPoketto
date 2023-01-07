@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class LoadShop : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class LoadShop : MonoBehaviour
         
     }
 
-    private void OnMouseUp()
+    private void OnMouseDown()
     {
         InGame.SetActive(false);
         Shop.SetActive(true);
@@ -21,6 +22,5 @@ public class LoadShop : MonoBehaviour
 
     void Update()
     {
-        
     }
 }

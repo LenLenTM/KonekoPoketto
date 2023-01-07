@@ -32,7 +32,6 @@ public class NewCat : MonoBehaviour
             MainMenu.SetActive(false);
             LittleCatMeow.SetActive(false);
             InGame.SetActive(true);
-            //LoadGame.loadRoom();
         }
     }
 

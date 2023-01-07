@@ -20,30 +20,30 @@ public class Swipe : MonoBehaviour
             startTocuhPosition = Input.GetTouch(0).position;
         }
 
+        
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
         {
             endTouchPosition = Input.GetTouch(0).position;
 
-            if (endTouchPosition.x < startTocuhPosition.x)
+            Debug.Log(startTocuhPosition - endTouchPosition);
+            if (endTouchPosition.x > startTocuhPosition.x && endTouchPosition.x - startTocuhPosition.x > 380)
             {
                 //RIGHT
                 if (Shop.activeSelf)
                 {
-                    if (focusShop.transform.position.x < 5.5f)
+                    if (focusShop.transform.position.x < 5f)
                     {
-                        for (int i = 0; i < 550; i++)
-                        {
-                            focusShop.transform.Translate(0.01f, 0, 0);
-                        }
+                        focusShop.transform.Translate(5, 0, 0);
                     }
                 }
                 else
                 {
                     if (focus.transform.position.x < 5.5f)
                     {
+                        focus.transform.Translate(5.5f, 0, 0);
                         for (int i = 0; i < 550; i++)
                         {
-                            focus.transform.Translate(0.01f, 0, 0);
+                            
                         }
                     }
                 }
@@ -51,27 +51,24 @@ public class Swipe : MonoBehaviour
                 
             }
 
-            if (endTouchPosition.x > startTocuhPosition.x)
+            if (endTouchPosition.x < startTocuhPosition.x && startTocuhPosition.x - endTouchPosition.x > 380)
             {
-                
                 //LEFT
                 if (Shop.activeSelf)
                 {
-                    if (focusShop.transform.position.x > -5.5f)
+                    if (focusShop.transform.position.x > -5f)
                     {
-                        for (int i = 0; i < 550; i++)
-                        {
-                            focusShop.transform.Translate(-0.01f, 0, 0);
-                        }
+                        focusShop.transform.Translate(-5, 0, 0);
                     }
                 }
                 else
                 {
                     if (focus.transform.position.x > -5.5f)
                     {
+                        focus.transform.Translate(-5.5f, 0, 0);
                         for (int i = 0; i < 550; i++)
                         {
-                            focus.transform.Translate(-0.01f, 0, 0);
+                            
                         }
                     }
                 }
