@@ -15,6 +15,7 @@ public class ChooseCustomCat : MonoBehaviour
     private void OnMouseDown()
     {
         string name = catNameInput.text;
+        catNameInput.text = "";
 
         byte[] by = Encoding.ASCII.GetBytes(catNameInput.text);
         int catPictureNumber = 0;

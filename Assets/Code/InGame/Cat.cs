@@ -15,10 +15,13 @@ namespace Code
         public int bodymass;
         public string name;            //given
         public string idlePicture;     //given
+        public int needsToPoo;
+        public int healthPoints;
+        public bool hasEaten;
         
         //all int values range form 0 to 99
         
-        public Cat(int needForAffection, int playfull, int metabolism, int hunger, int anger, int tiredness, int boredom, int bodymass, string name, string idlePicture)
+        public Cat(int needForAffection, int playfull, int metabolism, int hunger, int anger, int tiredness, int boredom, int bodymass, string name, string idlePicture, int needsToPoo, int healthPoints, bool hasEaten)
         {
             this.needForAffection = needForAffection;
             this.playfull = playfull;
@@ -30,6 +33,9 @@ namespace Code
             this.bodymass = bodymass;
             this.name = name;
             this.idlePicture = idlePicture;
+            this.needsToPoo = needsToPoo;
+            this.healthPoints = healthPoints;
+            this.hasEaten = hasEaten;
         }
     }
 }

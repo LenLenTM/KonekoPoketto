@@ -21,10 +21,10 @@ public class NewCat : MonoBehaviour
     {
         if (transform.GetChild(1).GetComponent<TextMeshProUGUI>().text.Equals("Create a cat"))
         {
+            defineSlot();
             LittleCatMeow.SetActive(false);
             AdoptOrNew.SetActive(true);
             MainMenu.SetActive(false);
-            defineSlot();
         }
         else
         {

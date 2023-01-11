@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Code.InGame;
 using Newtonsoft.Json;
@@ -20,10 +21,11 @@ namespace Code
             Toy starterToy = new Toy("Mouse", starterToySprite, 20);
             CatTree starterCatTree = new CatTree("Caveman Cat", starterCatTreeSprite, 1);
             CatBed starterCatBed = new CatBed("Pawd", starterCatBedSprite, 15);
-            LitterBox starterLitterBox = new LitterBox("Basic Poo", starterLitterBoxSprite, 10, 99);
+            LitterBox starterLitterBox = new LitterBox("Basic Poo", starterLitterBoxSprite, 10, 0);
             Cat myCat = CatGenerator.generateCat(catName, catSprite);
+            DateTime date = DateTime.Now;
 
-            Savegame savegame = new Savegame(starterFood, starterToy, starterCatTree, starterCatBed, starterLitterBox, myCat, 2000);
+            Savegame savegame = new Savegame(starterFood, starterToy, starterCatTree, starterCatBed, starterLitterBox, myCat, 2000, date, false, true);
 
             string gameTextEncoded = Savegame.encodeSavegame(savegame);
             WriteSaveGame.createNewSaveGame(gameTextEncoded);

@@ -11,7 +11,7 @@ public class ExitShop : MonoBehaviour
         
     }
 
-    private void OnMouseUp()
+    private void OnMouseDown()
     {
         InGame.SetActive(true);
         Shop.SetActive(false);

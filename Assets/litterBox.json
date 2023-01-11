@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Basic Poo",
+    "graphic": "LitterBox_0",
+    "pooCapacity": 25,
+    "dirtyness": 0
+  },
+  {
+    "name": "Paw Potty",
+    "graphic": "LitterBox_1",
+    "pooCapacity": 50,
+    "dirtyness": 0
+  },
+  {
+    "name": "Kings Throne",
+    "graphic": "LitterBox_2",
+    "pooCapacity": 100,
+    "dirtyness": 0
+  }
+]

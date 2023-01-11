@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Image = UnityEngine.UI.Image;
 
 namespace Code
@@ -8,16 +9,15 @@ namespace Code
     {
 
         public GameObject Shelter;
-        public GameObject TheRoom;
-        private void OnMouseUp()
+        public GameObject InGame;
+        private void OnMouseDown()
         {
             GameObject picture = gameObject.transform.GetChild(0).gameObject;
             GameObject name = gameObject.transform.GetChild(1).gameObject;
 
             GameGenerator.createNewGame(name.GetComponent<TextMeshProUGUI>().text, picture.GetComponent<Image>().sprite.name);
             Shelter.SetActive(false);
-            TheRoom.SetActive(true);
-            //LoadGame.loadRoom();
+            InGame.SetActive(true);
         }
     }
 }

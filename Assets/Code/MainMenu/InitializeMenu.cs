@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using Code;
+using Code.InGame;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,12 +15,24 @@ public class InitializeMenu : MonoBehaviour
     public GameObject CreateOrLoad3;
 
     public Sprite[] catPictures;
+    public Sprite gravestone;
+    public GameObject[] deleter;
+    public GameObject exit;
     
     void Start()
     {
         loadSavegames();
     }
 
+    void Update()
+    {
+        if (!exit.activeSelf)
+        {
+            exit.SetActive(true);
+            loadSavegames();
+        }
+    }
+    
     void loadSavegames()
     {
         Savegame savegame;
@@ -30,7 +44,11 @@ public class InitializeMenu : MonoBehaviour
             
             string cat = savegame.cat.idlePicture;
             string name = savegame.cat.name;
-            adaptMenu(cat, name, 1);
+            
+            setSlot(1);
+            updateCat(savegame);
+            adaptMenu(cat, name, 1, savegame);
+            deleter[0].SetActive(true);
         }
         if (File.Exists("Save2.txt"))
         {
@@ -39,7 +57,11 @@ public class InitializeMenu : MonoBehaviour
             
             string cat = savegame.cat.idlePicture;
             string name = savegame.cat.name;
-            adaptMenu(cat, name, 2);
+            
+            setSlot(2);
+            updateCat(savegame);
+            adaptMenu(cat, name, 2, savegame);
+            deleter[1].SetActive(true);
         }
         if (File.Exists("Save3.txt"))
         {
@@ -48,32 +70,145 @@ public class InitializeMenu : MonoBehaviour
             
             string cat = savegame.cat.idlePicture;
             string name = savegame.cat.name;
-            adaptMenu(cat, name, 3);
+            
+            setSlot(3);
+            updateCat(savegame);
+            adaptMenu(cat, name, 3, savegame);
+            deleter[2].SetActive(true);
         }
         
     }
 
-    void adaptMenu(string cat, string name, int slot)
+    void setSlot(int slot)
+    {
+        GameData gameData = new GameData(slot);
+        string toWrite = JsonConvert.SerializeObject(gameData);
+        File.WriteAllText("gameData.json", toWrite);
+    }
+    
+    void updateCat(Savegame savegame)
+    {
+        DateTime saveTime = savegame.date;
+        DateTime nowTime = DateTime.Now;
+        TimeSpan elapsedTime = nowTime - saveTime;
+        int elapsedHours = (int)elapsedTime.TotalHours;
+        
+        int timeHungerAtZero = (int)(savegame.cat.hunger / 4 * ((float)savegame.cat.metabolism / 100));
+        int timeBoredomAtZero = (int)(savegame.cat.boredom / 4 * ((float)savegame.cat.playfull / 100));
+        
+        savegame.cat.hunger = (int)(savegame.cat.hunger - 2 * elapsedHours * ((float)(savegame.cat.metabolism / 100)));
+        if (savegame.cat.hunger < 0)
+        {
+            savegame.cat.hunger = 0;
+        }
+        //TODO: implement increase of different catFood
+        savegame.cat.boredom = (int)(savegame.cat.boredom - 2 * elapsedHours * ((float)savegame.cat.playfull / 100));
+        if (savegame.cat.boredom < 0)
+        {
+            savegame.cat.boredom = 0;
+        }
+
+        if (savegame.litterBox.dirtyness > savegame.litterBox.pooCapacity && savegame.cat.hasEaten)
+        {
+            if (elapsedHours == 1)
+            {
+                savegame.cat.needsToPoo += 25;
+            }
+
+            if (elapsedHours >= 2)
+            {
+                savegame.cat.needsToPoo = 50;
+            }
+        }
+        
+        if (savegame.cat.hasEaten && savegame.litterBox.dirtyness < savegame.litterBox.pooCapacity)
+        {
+            savegame.cat.hasEaten = false;
+            savegame.litterBox.dirtyness += 25;
+            savegame.cat.needsToPoo = 0;
+
+            //TODO: implement increase of different catFood
+        }
+
+        if (savegame.cat.hunger == 0 || savegame.cat.boredom == 0 || savegame.cat.needsToPoo >= 50)
+        {
+            int timeHungry = elapsedHours - timeHungerAtZero;
+            int timeBored = elapsedHours - timeBoredomAtZero;
+            int timeNeedPoo = elapsedHours - 2;
+
+            if (savegame.cat.hunger == 0)
+            {
+                savegame.cat.healthPoints -= timeHungry * 6;
+            }
+            else if (savegame.cat.needsToPoo >= 50)
+            {
+                savegame.cat.healthPoints -= timeNeedPoo * 4;
+            }
+            else if (savegame.cat.boredom == 0)
+            {
+                savegame.cat.healthPoints -= timeBored * 2;
+            }
+        }
+
+        if (savegame.cat.healthPoints <= 0)
+        {
+            savegame.alive = false;
+        }
+        
+        if (savegame.cat.hunger > 0 && savegame.cat.boredom > 0 && savegame.cat.needsToPoo < 50 && savegame.cat.healthPoints < 99)
+        {
+            savegame.cat.healthPoints += 8 * elapsedHours;
+            if (savegame.cat.healthPoints > 99)
+            {
+                savegame.cat.healthPoints = 99;
+            }
+        }
+
+        WriteSaveGame.createNewSaveGame(Savegame.encodeSavegame(savegame));
+    }
+
+    void adaptMenu(string cat, string name, int slot, Savegame savegame)
     {
         if (slot == 1)
         {
             GameObject catPicture = CreateOrLoad1.transform.GetChild(0).gameObject;
             GameObject catName = CreateOrLoad1.transform.GetChild(1).gameObject;
-            catPicture.GetComponent<Image>().sprite = compareCatName(cat);
+            if (savegame.alive)
+            {
+                catPicture.GetComponent<Image>().sprite = compareCatName(cat);
+            }
+            else
+            {
+                catPicture.GetComponent<Image>().sprite = gravestone;
+            }
+
             catName.GetComponent<TextMeshProUGUI>().text = name;
         }
         else if (slot == 2)
         {
             GameObject catPicture = CreateOrLoad2.transform.GetChild(0).gameObject;
             GameObject catName = CreateOrLoad2.transform.GetChild(1).gameObject;
-            catPicture.GetComponent<Image>().sprite = compareCatName(cat);
+            if (savegame.alive)
+            {
+                catPicture.GetComponent<Image>().sprite = compareCatName(cat);
+            }
+            else
+            {
+                catPicture.GetComponent<Image>().sprite = gravestone;
+            }
             catName.GetComponent<TextMeshProUGUI>().text = name;
         }
         else
         {
             GameObject catPicture = CreateOrLoad3.transform.GetChild(0).gameObject;
             GameObject catName = CreateOrLoad3.transform.GetChild(1).gameObject;
-            catPicture.GetComponent<Image>().sprite = compareCatName(cat);
+            if (savegame.alive){
+                catPicture.GetComponent<Image>().sprite = compareCatName(cat);
+            }
+            else
+            {
+                catPicture.GetComponent<Image>().sprite = gravestone;
+            }
             catName.GetComponent<TextMeshProUGUI>().text = name;
         }
     }
@@ -89,9 +224,5 @@ public class InitializeMenu : MonoBehaviour
             }
         }
         return catPictures[0];
-    }
-    void Update()
-    {
-        
     }
 }

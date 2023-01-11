@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Code.InGame;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
 
@@ -20,11 +21,16 @@ namespace Code
 
             int[] preValues = hashCat(name);
 
+            if (preValues[0] == 0)
+            {
+                
+            }
+
             int needForAffection = preValues[0];
             int playfull = preValues[1];
             int metabolism = preValues[2];
 
-            return new Cat(needForAffection, playfull, metabolism, hunger, anger, tiredness, boredom, bodymass, name, idlePicture);
+            return new Cat(needForAffection, playfull, metabolism, hunger, anger, tiredness, boredom, bodymass, name, idlePicture, 0, 99, false);
         }
 
         public static int[] hashCat(string name)
@@ -35,7 +41,6 @@ namespace Code
             {
                 valueAsString += x;
             }
-            Debug.Log(valueAsString);
             Random random = new Random(1312);
 
             long value;
@@ -47,16 +52,27 @@ namespace Code
             {
                 value = (long)random.NextDouble(10000, 999999);
             }
-            valueAsString = value.ToString().PadLeft(6, (char)random.NextInt(0, 99));
+            //valueAsString = value.ToString().PadLeft(6, (char)random.NextInt(0, 99));
 
-            try
+            if (value < 10)
             {
-                value = Int32.Parse(valueAsString);
+                value *= 100000;
             }
-            catch (Exception e)
+            else if (value < 100)
             {
-                Debug.Log(name);
-                throw;
+                value *= 10000;
+            }
+            else if (value < 1000)
+            {
+                value *= 1000;   
+            }
+            else if (value < 10000)
+            {
+                value *= 100;
+            }
+            else if (value < 100000)
+            {
+                value *= 10;
             }
 
             int nFA = (int)value / 10000;
