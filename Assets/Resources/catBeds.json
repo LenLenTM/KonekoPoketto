@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Pawd",
+    "graphic": "CatBed_0", 
+    "relaxValue": 10
+  },
+  {
+    "name": "Cozy Cat",
+    "graphic": "CatBed_1",
+    "relaxValue": 20
+  },
+  {
+    "name": "Catopy",
+    "graphic": "CatBed_2",
+    "relaxValue": 30
+  },
+]

@@ -13,6 +13,8 @@ public class Swipe : MonoBehaviour
     public GameObject focusShop;
     public GameObject Shop;
     public GameObject deathScreen;
+    public GameObject Right;
+    public GameObject Left;
     
     void Update()
     {
@@ -28,7 +30,7 @@ public class Swipe : MonoBehaviour
             {
                 endTouchPosition = Input.GetTouch(0).position;
 
-                if (endTouchPosition.x > startTocuhPosition.x && endTouchPosition.x - startTocuhPosition.x > 380)
+                if (endTouchPosition.x > startTocuhPosition.x && endTouchPosition.x - startTocuhPosition.x > 320)
                 {
                     //RIGHT
                     if (Shop.activeSelf)
@@ -37,23 +39,24 @@ public class Swipe : MonoBehaviour
                         {
                             focusShop.transform.Translate(5, 0, 0);
                         }
+                        if (focusShop.transform.position.x >= 5f)
+                        {
+                            Left.SetActive(false);
+                        }
+                        Right.SetActive(true);
                     }
                     else
                     {
                         if (focus.transform.position.x < 5.5f)
                         {
                             focus.transform.Translate(5.5f, 0, 0);
-                            for (int i = 0; i < 550; i++)
-                            {
-
-                            }
                         }
                     }
 
 
                 }
 
-                if (endTouchPosition.x < startTocuhPosition.x && startTocuhPosition.x - endTouchPosition.x > 380)
+                if (endTouchPosition.x < startTocuhPosition.x && startTocuhPosition.x - endTouchPosition.x > 320)
                 {
                     //LEFT
                     if (Shop.activeSelf)
@@ -62,16 +65,17 @@ public class Swipe : MonoBehaviour
                         {
                             focusShop.transform.Translate(-5, 0, 0);
                         }
+                        if (focusShop.transform.position.x <= -5f)
+                        {
+                            Right.SetActive(false);
+                        }
+                        Left.SetActive(true);
                     }
                     else
                     {
                         if (focus.transform.position.x > -5.5f)
                         {
                             focus.transform.Translate(-5.5f, 0, 0);
-                            for (int i = 0; i < 550; i++)
-                            {
-
-                            }
                         }
                     }
                 }

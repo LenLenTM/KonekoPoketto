@@ -10,7 +10,7 @@ namespace Code
         public static bool createNewSaveGame(string savegame)
         {
             int slot;
-            using (StreamReader slotNumber = new StreamReader("gameData.json"))
+            using (StreamReader slotNumber = new StreamReader(Application.persistentDataPath + "/KonekoPokettoData/gameData.json"))
             {
                 string json = slotNumber.ReadToEnd();
                 slot = JsonConvert.DeserializeObject<GameData>(json).gameSlot;
@@ -34,7 +34,7 @@ namespace Code
 
         private static void writeSave(string filename, string savegame)
         {
-            File.WriteAllText(filename, savegame);
+            File.WriteAllText(Application.persistentDataPath + "/KonekoPokettoData/" + filename, savegame);
         }
     }
 }

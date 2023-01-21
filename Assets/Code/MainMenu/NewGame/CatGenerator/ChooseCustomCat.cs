@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Code;
@@ -9,15 +10,25 @@ public class ChooseCustomCat : MonoBehaviour
 {
     public GameObject CustomCat;
     public GameObject InGame;
-    public TMP_InputField catNameInput;
+    public GameObject catNameInput;
+    public GameObject catNameInputParent;
     public List<Sprite> catSpriteList;
+    public GameObject Click;
 
     private void OnMouseDown()
     {
-        string name = catNameInput.text;
-        catNameInput.text = "";
+        Click.GetComponent<AudioSource>().Play();
+        
+        string name = catNameInput.GetComponent<TextMeshProUGUI>().text;
+        catNameInput.GetComponent<TextMeshProUGUI>().text = String.Empty;
+        //catNameInputParent.GetComponent<TextMeshPro>().text = "";
 
-        byte[] by = Encoding.ASCII.GetBytes(catNameInput.text);
+        if (name.EndsWith("?"))
+        {
+            name = name.Remove(name.Length - 1);
+        }
+
+        byte[] by = Encoding.ASCII.GetBytes(name);
         int catPictureNumber = 0;
 
         foreach (byte x in by)

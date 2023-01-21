@@ -10,5 +10,4 @@ public class TheEnd : MonoBehaviour
     {
         GetComponent<Animator>().SetTrigger("TriggerReaper");
     }
-    
 }

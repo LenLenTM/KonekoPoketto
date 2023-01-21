@@ -12,6 +12,7 @@ public class NewCat : MonoBehaviour
     public GameObject LittleCatMeow;
     public GameObject MainMenu;
     public GameObject InGame;
+    public GameObject Click;
     void Start()
     {
         
@@ -19,6 +20,8 @@ public class NewCat : MonoBehaviour
 
     private void OnMouseDown()
     {
+        Click.GetComponent<AudioSource>().Play();
+        
         if (transform.GetChild(1).GetComponent<TextMeshProUGUI>().text.Equals("Create a cat"))
         {
             defineSlot();
@@ -40,7 +43,14 @@ public class NewCat : MonoBehaviour
         int slot = Int32.Parse(this.name.Substring(12));
         GameData gameData = new GameData(slot);
         string toWrite = JsonConvert.SerializeObject(gameData);
-        File.WriteAllText("gameData.json", toWrite);
+        
+        if (!Directory.Exists(Application.persistentDataPath + "/KonekoPokettoData"))
+        {
+            
+            Directory.CreateDirectory(Application.persistentDataPath + "/KonekoPokettoData");
+        }
+        
+        File.WriteAllText(Application.persistentDataPath + "/KonekoPokettoData/gameData.json", toWrite);
     }
     void Update()
     {

@@ -1,11 +1,14 @@
-using System.IO;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using Code;
-using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class CatTree_1 : MonoBehaviour
+public class UnlockBall : MonoBehaviour
 {
+    public GameObject BallIdle;
     public GameObject FurballsShop;
     public GameObject FurballsInGame;
     public GameObject Click;
@@ -15,31 +18,28 @@ public class CatTree_1 : MonoBehaviour
     {
         time = Time.time;
     }
+
     private void OnMouseUp()
     {
         Savegame savegame = Savegame.loadSavegame();
+        
         float deltaTime = Time.time - time;
-        if (savegame.furballs >= 120 && deltaTime < 0.15f)
+        
+        if (savegame.furballs >= 40 && deltaTime < 0.15f)
         {
             Click.GetComponent<AudioSource>().Play();
-            
-            TextAsset getNewTree = Resources.Load<TextAsset>("catTrees");
-            CatTree[] catTree = JsonConvert.DeserializeObject<CatTree[]>(getNewTree.ToString());
-            savegame.catTree = catTree[1];
-            
-            /**
-            using (StreamReader getNewTree = new StreamReader("Assets/catTrees.json"))
-            {
-                string json = getNewTree.ReadToEnd();
-                CatTree[] catTree = JsonConvert.DeserializeObject<CatTree[]>(json);
-                savegame.catTree = catTree[1];
-            } **/
-            
-            savegame.furballs -= 120;
+            //BallIdle.SetActive(true);
+            savegame.furballs -= 40;
+            savegame.toys[0] = 1;
             WriteSaveGame.createNewSaveGame(Savegame.encodeSavegame(savegame));
             
             FurballsShop.GetComponent<TextMeshProUGUI>().text = savegame.furballs.ToString() + " ₵";
             FurballsInGame.GetComponent<TextMeshProUGUI>().text = savegame.furballs.ToString() + " ₵";
         }
+    }
+
+    void Update()
+    {
+        
     }
 }

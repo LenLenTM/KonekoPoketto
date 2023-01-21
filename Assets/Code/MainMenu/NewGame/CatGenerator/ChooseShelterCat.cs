@@ -10,8 +10,10 @@ namespace Code
 
         public GameObject Shelter;
         public GameObject InGame;
+        public GameObject Click;
         private void OnMouseDown()
         {
+            Click.GetComponent<AudioSource>().Play();
             GameObject picture = gameObject.transform.GetChild(0).gameObject;
             GameObject name = gameObject.transform.GetChild(1).gameObject;
 

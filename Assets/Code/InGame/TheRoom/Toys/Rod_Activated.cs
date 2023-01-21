@@ -1,33 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class ExitShop : MonoBehaviour
+public class Rod_Activated : MonoBehaviour
 {
-    public GameObject InGame;
-    public GameObject Shop;
     public GameObject Click;
-    
+
     private float time;
     private void OnMouseDown()
     {
         time = Time.time;
     }
-
     private void OnMouseUp()
     {
         float deltaTime = Time.time - time;
-
         if (deltaTime < 0.15f)
         {
             Click.GetComponent<AudioSource>().Play();
-            InGame.SetActive(true);
-            Shop.SetActive(false);
+            transform.GameObject().SetActive(false);
         }
-    }
-
-    void Update()
-    {
-        
     }
 }

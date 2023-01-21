@@ -1,10 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using Code;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 
-public class CatTree_1 : MonoBehaviour
+public class Bed_0 : MonoBehaviour
 {
     public GameObject FurballsShop;
     public GameObject FurballsInGame;
@@ -18,24 +20,25 @@ public class CatTree_1 : MonoBehaviour
     private void OnMouseUp()
     {
         Savegame savegame = Savegame.loadSavegame();
+        
         float deltaTime = Time.time - time;
-        if (savegame.furballs >= 120 && deltaTime < 0.15f)
+        
+        if (savegame.furballs >= 0 && deltaTime < 0.15f)
         {
             Click.GetComponent<AudioSource>().Play();
+
+            TextAsset getNewBed = Resources.Load<TextAsset>("catBeds");
+            CatBed[] catBeds = JsonConvert.DeserializeObject<CatBed[]>(getNewBed.ToString());
+            savegame.catBed = catBeds[0];
             
-            TextAsset getNewTree = Resources.Load<TextAsset>("catTrees");
-            CatTree[] catTree = JsonConvert.DeserializeObject<CatTree[]>(getNewTree.ToString());
-            savegame.catTree = catTree[1];
-            
-            /**
-            using (StreamReader getNewTree = new StreamReader("Assets/catTrees.json"))
+            /**using (StreamReader getNewBed = new StreamReader("Assets/catBeds.json"))
             {
-                string json = getNewTree.ReadToEnd();
-                CatTree[] catTree = JsonConvert.DeserializeObject<CatTree[]>(json);
-                savegame.catTree = catTree[1];
+                string json = getNewBed.ReadToEnd();
+                CatBed[] catBeds = JsonConvert.DeserializeObject<CatBed[]>(json);
+                savegame.catBed = catBeds[0];
             } **/
             
-            savegame.furballs -= 120;
+            savegame.furballs -= 0;
             WriteSaveGame.createNewSaveGame(Savegame.encodeSavegame(savegame));
             
             FurballsShop.GetComponent<TextMeshProUGUI>().text = savegame.furballs.ToString() + " ₵";

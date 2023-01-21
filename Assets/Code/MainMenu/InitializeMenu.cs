@@ -17,7 +17,8 @@ public class InitializeMenu : MonoBehaviour
     public Sprite[] catPictures;
     public Sprite gravestone;
     public GameObject[] deleter;
-    public GameObject exit;
+    public GameObject exitDeathScreen;
+    public GameObject exitInGame;
     
     void Start()
     {
@@ -26,9 +27,10 @@ public class InitializeMenu : MonoBehaviour
 
     void Update()
     {
-        if (!exit.activeSelf)
+        if (!exitDeathScreen.activeSelf || !exitInGame.activeSelf)
         {
-            exit.SetActive(true);
+            exitDeathScreen.SetActive(true);
+            exitInGame.SetActive(true);
             loadSavegames();
         }
     }
@@ -37,9 +39,9 @@ public class InitializeMenu : MonoBehaviour
     {
         Savegame savegame;
         
-        if (File.Exists("Save1.txt"))
+        if (File.Exists(Application.persistentDataPath + "/KonekoPokettoData/Save1.txt"))
         {
-            string file = File.ReadAllText("Save1.txt");
+            string file = File.ReadAllText(Application.persistentDataPath + "/KonekoPokettoData/Save1.txt");
             savegame = Savegame.decodeSavegame(file);
             
             string cat = savegame.cat.idlePicture;
@@ -50,9 +52,9 @@ public class InitializeMenu : MonoBehaviour
             adaptMenu(cat, name, 1, savegame);
             deleter[0].SetActive(true);
         }
-        if (File.Exists("Save2.txt"))
+        if (File.Exists(Application.persistentDataPath + "/KonekoPokettoData/Save2.txt"))
         {
-            string file = File.ReadAllText("Save2.txt");
+            string file = File.ReadAllText(Application.persistentDataPath + "/KonekoPokettoData/Save2.txt");
             savegame = Savegame.decodeSavegame(file);
             
             string cat = savegame.cat.idlePicture;
@@ -63,9 +65,9 @@ public class InitializeMenu : MonoBehaviour
             adaptMenu(cat, name, 2, savegame);
             deleter[1].SetActive(true);
         }
-        if (File.Exists("Save3.txt"))
+        if (File.Exists(Application.persistentDataPath + "/KonekoPokettoData/Save3.txt"))
         {
-            string file = File.ReadAllText("Save3.txt");
+            string file = File.ReadAllText(Application.persistentDataPath + "/KonekoPokettoData/Save3.txt");
             savegame = Savegame.decodeSavegame(file);
             
             string cat = savegame.cat.idlePicture;
@@ -83,7 +85,13 @@ public class InitializeMenu : MonoBehaviour
     {
         GameData gameData = new GameData(slot);
         string toWrite = JsonConvert.SerializeObject(gameData);
-        File.WriteAllText("gameData.json", toWrite);
+        
+        if (!Directory.Exists(Application.persistentDataPath + "/KonekoPokettoData"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/KonekoPokettoData");
+        }
+        
+        File.WriteAllText(Application.persistentDataPath + "/KonekoPokettoData/gameData.json", toWrite);
     }
     
     void updateCat(Savegame savegame)
@@ -153,15 +161,16 @@ public class InitializeMenu : MonoBehaviour
         if (savegame.cat.healthPoints <= 0)
         {
             savegame.alive = false;
+            savegame.cat.healthPoints = 0;
         }
         
         if (savegame.cat.hunger > 0 && savegame.cat.boredom > 0 && savegame.cat.needsToPoo < 50 && savegame.cat.healthPoints < 99)
         {
             savegame.cat.healthPoints += 8 * elapsedHours;
-            if (savegame.cat.healthPoints > 99)
-            {
-                savegame.cat.healthPoints = 99;
-            }
+        }
+        if (savegame.cat.healthPoints > 99)
+        {
+            savegame.cat.healthPoints = 99;
         }
 
         WriteSaveGame.createNewSaveGame(Savegame.encodeSavegame(savegame));

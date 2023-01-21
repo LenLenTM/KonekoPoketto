@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class ExitShop : MonoBehaviour
+public class Whool_Idle : MonoBehaviour
 {
-    public GameObject InGame;
-    public GameObject Shop;
+
+    public GameObject WhoolActivated;
+    public GameObject BallActivated;
+    public GameObject RodActivated;
     public GameObject Click;
     
     private float time;
@@ -21,8 +25,9 @@ public class ExitShop : MonoBehaviour
         if (deltaTime < 0.15f)
         {
             Click.GetComponent<AudioSource>().Play();
-            InGame.SetActive(true);
-            Shop.SetActive(false);
+            WhoolActivated.SetActive(true);
+            BallActivated.SetActive(false);
+            RodActivated.SetActive(false);
         }
     }
 

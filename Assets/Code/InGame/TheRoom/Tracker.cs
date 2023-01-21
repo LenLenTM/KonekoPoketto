@@ -16,6 +16,7 @@ public class Tracker : MonoBehaviour
     
     private Vector3 offset;
     private Vector3 offsetShop;
+
     void Start()
     {
         offset = (Vector3)tracakingOffset;

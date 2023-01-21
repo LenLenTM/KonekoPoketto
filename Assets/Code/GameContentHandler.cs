@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using Code;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = System.Random;
 
 public class GameContentHandler : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class GameContentHandler : MonoBehaviour
     public List<Sprite> foodBowlSprites;
     public List<Sprite> catTreeSprites;
     public List<Sprite> litterBoxSprites;
+    public List<Sprite> catBedSprites;
     public List<Sprite> roomBackgrounds;
     public List<Sprite> hungerSteps;
     public List<Sprite> boredomSteps;
@@ -22,28 +25,38 @@ public class GameContentHandler : MonoBehaviour
     public Image catTree;
     public Image foodBowl;
     public Image litterBox;
+    public Image catBed;
 
     public GameObject stinkyParticles;
 
-    public List<GameObject> catPositions;
+    public List<GameObject> catPositionsNeeds;
+    public List<GameObject> catPositionsChill;
+
     public GameObject InGame;
     public GameObject TheRoom;
     public GameObject TheEndRoom;
     public GameObject TheCat;
     public GameObject DeathSceen;
     
-    public GameObject furballs;
+    public GameObject furballsInGame;
+    public GameObject furballsShop;
     public GameObject hunger;
     public GameObject boredom;
     public GameObject healthPoints;
     public GameObject poopNeed;
     public GameObject tiredness;
 
+    public GameObject Ball;
+    public GameObject Rod;
+
+    public GameObject catEatingSound;
+    public GameObject catPoopSound;
+
     private bool inGameSwitch = false;
     
     private float time = 0.0f;
-    private float timePeriodNeeds = 5; //default: 1800
-    private float timePeriodMovement = 3; //also change if condition ín update loop (modulo)
+    private float timePeriodNeeds = 5; //default: 1800  -> Test: 5
+    private float timePeriodMovement = 2; //also change if condition ín update loop (modulo) default: 120 -> test: 2
 
     void Start()
     {
@@ -65,40 +78,47 @@ public class GameContentHandler : MonoBehaviour
         time += Time.deltaTime;
         if (time >= timePeriodNeeds)
         {
-            time = time - timePeriodNeeds;
+
             if (InGame.activeSelf)
             {
                 updateCatNeeds();
                 Debug.Log("Updated");
             }
+
+            if ((time % 3) >= timePeriodMovement && InGame.activeSelf)
+            {
+                updateCatPosition();
+            }
+
+            time = time - timePeriodNeeds;
         }
 
-        if ((time % 3) >= timePeriodMovement)
-        {
-            updateCatPosition();
-        }
+
     }
     
     void updateCatPosition()
     {
+        Debug.Log("Update Position");
         Savegame savegame = Savegame.loadSavegame();
         
         //eat
         if (savegame.cat.hunger < 70 && (foodBowl.sprite.name.Equals("FoodBowl_Full")))
         {
-            TheCat.transform.position = catPositions[1].transform.position;
-            int differennce = 99;
-            differennce = differennce - savegame.cat.hunger;
+            TheCat.transform.position = catPositionsNeeds[1].transform.position;
+            catEatingSound.GetComponent<AudioSource>().Play();
+            int difference = 99;
+            difference = difference - savegame.cat.hunger;
             if (savegame.cat.hunger < 70)
             {
                 savegame.cat.hunger += 30;
             }
             else
             {
-                savegame.cat.hunger += differennce;
+                savegame.cat.hunger += difference;
             }
             
             foodBowl.sprite = foodBowlSprites[0];
+            savegame.furballs += 5;
             savegame.foodBowl = false;
             savegame.cat.hasEaten = true;
         }
@@ -107,13 +127,19 @@ public class GameContentHandler : MonoBehaviour
         else if (savegame.cat.needsToPoo >= 25 && savegame.litterBox.dirtyness < savegame.litterBox.pooCapacity)
         {
             savegame.cat.hasEaten = false;
-            TheCat.transform.position = catPositions[2].transform.position;
+            TheCat.transform.position = catPositionsNeeds[2].transform.position;
             savegame.cat.needsToPoo = 0;
             savegame.litterBox.dirtyness += 25;
-            if (savegame.litterBox.dirtyness > savegame.litterBox.pooCapacity)
-            {
-                stinkyParticles.SetActive(true);
-            }
+            catPoopSound.GetComponent<AudioSource>().Play();
+        }
+        else
+        {
+            randomiseCatPosition(savegame);
+        }
+        //litter box particles
+        if (savegame.litterBox.dirtyness >= savegame.litterBox.pooCapacity && !stinkyParticles.activeSelf)
+        {
+            stinkyParticles.SetActive(true);
         }
         WriteSaveGame.createNewSaveGame(Savegame.encodeSavegame(savegame));
     }
@@ -143,7 +169,6 @@ public class GameContentHandler : MonoBehaviour
             savegame.cat.needsToPoo += 25;
         }
         
-        Debug.Log(savegame.cat.hunger);
         //healt points
         if (savegame.cat.hunger == 0 || savegame.cat.boredom == 0 || savegame.cat.needsToPoo > 25)
         {
@@ -176,6 +201,7 @@ public class GameContentHandler : MonoBehaviour
         }
         
         updateIcons(savegame);
+        updateFurballs(savegame);
         WriteSaveGame.createNewSaveGame(Savegame.encodeSavegame(savegame));
     }
 
@@ -205,7 +231,7 @@ public class GameContentHandler : MonoBehaviour
         {
             poopNeed.GetComponent<Image>().sprite = pooSteps[0];
         }
-
+        
         healthPoints.GetComponent<Image>().sprite = healthSteps[savegame.cat.healthPoints / 10];
         hunger.GetComponent<Image>().sprite = hungerSteps[hungerValue / 10];
         boredom.GetComponent<Image>().sprite = boredomSteps[boredomValue / 10];
@@ -221,9 +247,46 @@ public class GameContentHandler : MonoBehaviour
         updateIcons(savegame);
         updateFoodBowl(savegame);
         updateLitterBox(savegame);
+        updateCatBed(savegame);
+        randomiseCatPosition(savegame);
+        updateToys(savegame);
         updateDeath(savegame);
     }
 
+
+    void updateToys(Savegame savegame)
+    {
+        if (savegame.toys[0] == 1)
+        {
+            Ball.SetActive(true);
+        }
+        else
+        {
+            Ball.SetActive(false);
+        }
+
+        if (savegame.toys[1] == 1)
+        {
+            Rod.SetActive(true);
+        }
+        else
+        {
+            Rod.SetActive(false);
+        }
+    }
+    void updateCatBed(Savegame savegame)
+    {
+        int index = (savegame.catBed.relaxValue / 10) - 1;
+        catBed.sprite = catBedSprites[index];
+    }
+
+    void randomiseCatPosition(Savegame savegame)
+    {
+        Random random = new Random();
+        int range = savegame.catTree.levels + 1;
+        int index = random.Next(range);
+        TheCat.transform.position = catPositionsChill[index].transform.position;
+    }
     void updateLitterBox(Savegame savegame)
     {
         int index = (savegame.litterBox.pooCapacity / 25) - 1;
@@ -232,7 +295,7 @@ public class GameContentHandler : MonoBehaviour
             index = 2;
         }
         litterBox.sprite = litterBoxSprites[index];
-        if (savegame.litterBox.dirtyness > savegame.litterBox.pooCapacity)
+        if (savegame.litterBox.dirtyness >= savegame.litterBox.pooCapacity)
         {
             stinkyParticles.SetActive(true);
         }
@@ -281,7 +344,8 @@ public class GameContentHandler : MonoBehaviour
 
     void updateFurballs(Savegame savegame)
     {
-        furballs.GetComponent<TextMeshProUGUI>().text = savegame.furballs.ToString() + " ₵";
+        furballsInGame.GetComponent<TextMeshProUGUI>().text = savegame.furballs.ToString() + " ₵";
+        furballsShop.GetComponent<TextMeshProUGUI>().text = savegame.furballs.ToString() + " ₵";
     }
 
     void updateFoodBowl(Savegame savegame)

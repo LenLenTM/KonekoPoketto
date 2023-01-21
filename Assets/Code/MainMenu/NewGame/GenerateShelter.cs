@@ -1,11 +1,14 @@
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 using Random = System.Random;
 
 
@@ -18,6 +21,7 @@ public class GenerateShelter : MonoBehaviour
 {
     public GameObject AdoptOrNew;
     public GameObject Shelter;
+    public GameObject Click;
 
     public List<GameObject> catPictures;
     public List<GameObject> catNameTags;
@@ -25,6 +29,8 @@ public class GenerateShelter : MonoBehaviour
 
     public void OnMouseDown()
     {
+        Click.GetComponent<AudioSource>().Play();
+        
         AdoptOrNew.SetActive(false);
         Shelter.SetActive(true);
 
@@ -34,14 +40,14 @@ public class GenerateShelter : MonoBehaviour
     private void generateCats()
     {
         List<Cats> catNameArray = new List<Cats>();
-        using (StreamReader catsFromJson = new StreamReader("Assets/catNames.json"))
-        {
-            string json = catsFromJson.ReadToEnd();
-            catNameArray = JsonConvert.DeserializeObject<List<Cats>>(json);
-            Random random = new Random();
-            catNameArray = catNameArray.OrderBy(_ => random.Next()).ToList();
-            catNameArray.RemoveRange(6, 14);
-        }
+
+        TextAsset catNamesFile = Resources.Load<TextAsset>("catNames");
+        
+        catNameArray = JsonConvert.DeserializeObject<List<Cats>>(catNamesFile.ToString());
+        Random random = new Random();
+        catNameArray = catNameArray.OrderBy(_ => random.Next()).ToList();
+        catNameArray.RemoveRange(6, 14);
+        
 
         Random random2 = new Random();
         catSpriteList = catSpriteList.OrderBy(_ => random2.Next()).ToList();

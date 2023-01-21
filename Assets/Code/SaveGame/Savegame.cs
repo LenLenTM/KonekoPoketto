@@ -21,8 +21,9 @@ namespace Code
         public DateTime date;
         public bool foodBowl;
         public bool alive;
+        public int[] toys;
 
-        public Savegame(Food food, Toy toy, CatTree catTree, CatBed catBed, LitterBox litterBox, Cat cat, int furballs, DateTime date, bool foodBowl, bool alive)
+        public Savegame(Food food, Toy toy, CatTree catTree, CatBed catBed, LitterBox litterBox, Cat cat, int furballs, DateTime date, bool foodBowl, bool alive, int[] toys)
         {
             this.food = food;
             this.toy = toy;
@@ -34,6 +35,7 @@ namespace Code
             this.date = date;
             this.foodBowl = foodBowl;
             this.alive = alive;
+            this.toys = toys;
         }
 
         public static string encodeSavegame(Savegame savegame)
@@ -48,7 +50,7 @@ namespace Code
             gameToString += savegame.cat.needForAffection + "&" + savegame.cat.playfull + "&" + savegame.cat.metabolism + "&" + savegame.cat.hunger + "&"
                             + savegame.cat.anger + "&" + savegame.cat.tiredness + "&" + savegame.cat.boredom + "&" + savegame.cat.bodymass + "&"
                             + savegame.cat.name + "&" + savegame.cat.idlePicture + "&" + savegame.cat.needsToPoo + "&" + savegame.cat.healthPoints + "&" + savegame.cat.hasEaten + "&"
-                            + savegame.furballs + "&" + savegame.date + "&" + savegame.foodBowl + "&" + savegame.alive;
+                            + savegame.furballs + "&" + savegame.date + "&" + savegame.foodBowl + "&" + savegame.alive + "&" + savegame.toys[0] + "&" + savegame.toys[1];
             
             byte[] ascii = Encoding.ASCII.GetBytes(gameToString);
             string file = "";
@@ -93,14 +95,22 @@ namespace Code
             DateTime date = DateTime.Parse(paramStrings[30]);
             bool foodBowl = bool.Parse(paramStrings[31]);
             bool alive = bool.Parse(paramStrings[32]);
+            int[] toys = new int[2];
+            toys[0] = Int32.Parse(paramStrings[33]);
+            toys[1] = Int32.Parse(paramStrings[34]);
             
-            return new Savegame(food, toy, tree, bed, litterBox, myCat, furballs, date, foodBowl, alive);
+            if (myCat.name.EndsWith("?"))
+            {
+                myCat.name = myCat.name.Remove(myCat.name.Length - 1);
+            }
+            
+            return new Savegame(food, toy, tree, bed, litterBox, myCat, furballs, date, foodBowl, alive, toys);
         }
 
         public static Savegame loadSavegame()
         {
             int slot;
-            using (StreamReader slotJson = new StreamReader("gameData.json"))
+            using (StreamReader slotJson = new StreamReader(Application.persistentDataPath + "/KonekoPokettoData/gameData.json"))
             {
                 string json = slotJson.ReadToEnd();
                 slot = JsonConvert.DeserializeObject<GameData>(json).gameSlot;
@@ -109,15 +119,15 @@ namespace Code
             string file = "";
             if (slot == 1)
             {
-                file = File.ReadAllText("Save1.txt");
+                file = File.ReadAllText(Application.persistentDataPath + "/KonekoPokettoData/Save1.txt");
             }
             else if (slot == 2)
             {
-                file = File.ReadAllText("Save2.txt");
+                file = File.ReadAllText(Application.persistentDataPath + "/KonekoPokettoData/Save2.txt");
             }
             else
             {
-                file = File.ReadAllText("Save3.txt");
+                file = File.ReadAllText(Application.persistentDataPath + "/KonekoPokettoData/Save3.txt");
             }
             return Savegame.decodeSavegame(file);
         }

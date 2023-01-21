@@ -29,7 +29,7 @@ namespace Code
             int needForAffection = preValues[0];
             int playfull = preValues[1];
             int metabolism = preValues[2];
-
+            
             return new Cat(needForAffection, playfull, metabolism, hunger, anger, tiredness, boredom, bodymass, name, idlePicture, 0, 99, false);
         }
 
