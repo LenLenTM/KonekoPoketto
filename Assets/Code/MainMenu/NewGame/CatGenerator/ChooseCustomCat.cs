@@ -4,6 +4,7 @@ using System.Text;
 using Code;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using Random = System.Random;
 
 public class ChooseCustomCat : MonoBehaviour
@@ -20,8 +21,7 @@ public class ChooseCustomCat : MonoBehaviour
         Click.GetComponent<AudioSource>().Play();
         
         string name = catNameInput.GetComponent<TextMeshProUGUI>().text;
-        catNameInput.GetComponent<TextMeshProUGUI>().text = String.Empty;
-        //catNameInputParent.GetComponent<TextMeshPro>().text = "";
+        catNameInputParent.GetComponent<TMP_InputField>().text = "";
 
         if (name.EndsWith("?"))
         {
